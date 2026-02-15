@@ -1,5 +1,6 @@
 package expo.modules.workoutworker.utils
 
+import android.util.Log
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
@@ -39,7 +40,11 @@ class RepeatingTimerAction(
 
         job = scope.launch {
             while (isActive) {
-                onTick()
+                try {
+                    onTick()
+                } catch (e: Exception) {
+                    Log.e("RepeatingTimerAction", "Failed to handle timer tick", e)
+                }
                 delay(intervalMs)
             }
         }
@@ -72,8 +77,8 @@ class RepeatingTimerAction(
         destroyed = true
     }
 
-    private fun guardDestroyed(){
-        if(destroyed){
+    private fun guardDestroyed() {
+        if (destroyed) {
             throw UnsupportedOperationException("Timer destroyed")
         }
     }

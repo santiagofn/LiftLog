@@ -443,7 +443,7 @@ export class RecordedCardioExerciseSet {
   get isCompletelyFilled(): boolean {
     return (
       (this.blueprint.trackDuration || this.blueprint.target.type === 'time'
-        ? !!this.duration
+        ? !!this.duration && !this.duration.equals(Duration.ZERO)
         : true) &&
       (this.blueprint.trackDistance || this.blueprint.target.type === 'distance'
         ? !!this.distance
@@ -557,7 +557,7 @@ export class RecordedCardioExercise {
   }
 
   get isComplete(): boolean {
-    return this.sets.every((x) => !!x.completionDateTime);
+    return this.sets.every((x) => x.isCompletelyFilled);
   }
 
   get isStarted() {

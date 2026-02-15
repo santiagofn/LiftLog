@@ -10,6 +10,7 @@ import LiftLog.Ui.Models.Utils.WeightUnit.POUNDS
 import LiftLog.Ui.Models.WorkoutMessage.WorkoutMessageOuterClass
 import android.annotation.SuppressLint
 import android.app.Notification
+import android.util.Log
 import expo.modules.workoutworker.utils.RepeatingTimerAction
 import expo.modules.workoutworker.utils.WorkoutNotificationManager
 import kotlinx.coroutines.MainScope
@@ -36,13 +37,20 @@ class WorkoutUpdatedHandler(
         event: WorkoutMessageOuterClass.WorkoutMessage,
         dispatch: (type: String, event: WorkoutMessageOuterClass.WorkoutMessage) -> Unit
     ) {
-        val workoutUpdatedEvent = event.workoutUpdatedEvent
+        try {
+            val workoutUpdatedEvent = event.workoutUpdatedEvent
 
-        when {
-            workoutUpdatedEvent.hasRestTimerInfo() -> showRestTimerNotification(event)
-            workoutUpdatedEvent.hasCardioTimerInfo() -> showCardioTimerNotification(event)
-            workoutUpdatedEvent.hasCurrentExerciseDetails() -> showCurrentExerciseNotification(event)
-            else -> showFinishedNotification(event)
+            when {
+                workoutUpdatedEvent.hasRestTimerInfo() -> showRestTimerNotification(event)
+                workoutUpdatedEvent.hasCardioTimerInfo() -> showCardioTimerNotification(event)
+                workoutUpdatedEvent.hasCurrentExerciseDetails() -> showCurrentExerciseNotification(
+                    event
+                )
+
+                else -> showFinishedNotification(event)
+            }
+        } catch (e: Exception) {
+            Log.e("WorkoutUpdatedHandler", "Failed to handle workout updated event", e);
         }
     }
 
