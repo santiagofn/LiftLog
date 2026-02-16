@@ -27,6 +27,7 @@ class WorkoutNotificationManager(private val context: Context) {
             .setSmallIcon(R.drawable.fitness_center_24px)
             .setOngoing(true)
             .setSilent(true)
+            .setOnlyAlertOnce(true)
     }
 
     fun createRestNotificationBuilder(): NotificationCompat.Builder {
